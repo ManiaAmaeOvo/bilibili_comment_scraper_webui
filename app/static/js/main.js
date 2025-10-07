@@ -11,11 +11,23 @@ document.addEventListener("DOMContentLoaded", () => {
     let cookieWebSocket;
 
     function addLog(message, type) {
+        // 1. 获取当前时间并格式化为 HH:MM:SS
+        const now = new Date();
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+        const timestamp = `[${hours}:${minutes}:${seconds}]`;
+    
+        // 2. 创建一个新的 <p> 元素来存放日志
         const p = document.createElement('p');
         p.className = `log-${type}`;
-        p.innerHTML = message; // innerHTML to render links
+        
+        // 3. 创建一个带自定义class的span来包裹时间戳，并与消息拼接
+        //    使用 innerHTML 可以正确渲染消息中的链接等HTML标签
+        p.innerHTML = `<span class="log-timestamp">${timestamp}</span> ${message}`;
+        
         logConsole.appendChild(p);
-        logConsole.scrollTop = logConsole.scrollHeight;
+        logConsole.scrollTop = logConsole.scrollHeight; // 自动滚动到底部
     }
 
     // --- 自动获取Cookie逻辑 ---
