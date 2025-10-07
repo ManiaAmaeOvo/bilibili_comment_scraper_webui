@@ -1,0 +1,9 @@
+fastapi
+uvicorn[standard]
+curl_cffi[requests]
+python-multipart
+jinja2
+websockets
+playwright
+sse_starlette
+bilibili-api-python

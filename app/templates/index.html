@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B站评论爬取工具</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>B站评论爬取工具</h1>
+        <div class="form-container">
+            <p><strong>第一步:</strong> 点击下方按钮自动获取Cookie，或手动粘贴。</p>
+            <button id="get-cookie-btn">自动获取Cookie</button>
+            <textarea id="cookie-input" rows="4" placeholder="自动获取后会填充于此，或在此处手动粘贴..."></textarea>
+            
+            <p><strong>第二步:</strong> 输入目标视频的BV号。</p>
+            <input type="text" id="bvid-input" placeholder="例如: BV1TAnozgEpe">
+            
+            <div class="options-container">
+                <input type="checkbox" id="sub-comments-checkbox" checked>
+                <label for="sub-comments-checkbox">爬取楼中楼 (二级评论)</label>
+            </div>
+            
+            <button id="start-btn">开始爬取</button>
+        </div>
+        
+        <div class="console-container">
+            <h2>实时日志</h2>
+            <div id="log-console">
+                <p class="log-info">等待操作...</p>
+            </div>
+        </div>
+    </div>
+    
+    <script src="/static/js/main.js"></script>
+</body>
+</html>
