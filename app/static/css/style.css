@@ -2,17 +2,20 @@
 :root {
     --primary-color-start: #00a1d6;
     --primary-color-end: #fb7299;
-    --bg-color: #f8f9fa;
+    --bg-color: #f4f6f8; /* 稍微调整背景色以增加柔和感 */
     --container-bg: #ffffff;
-    --text-color: #343a40;
+    --text-color: #495057;
     --heading-color: #212529;
-    --border-color: #dee2e6;
-    --shadow-color: rgba(0, 0, 0, 0.08);
+    --border-color: #e9ecef; /* 边框颜色变浅 */
+    --shadow-color: rgba(0, 0, 0, 0.06);
     --success-color: #28a745;
     --error-color: #dc3545;
-    --info-color: #17a2b8;
-    --console-bg: #1e1e1e;
-    --console-text: #d4d4d4;
+    --warn-color: #ffc107;
+    
+    /* --- MODIFIED FOR MODERN TERMINAL LOOK --- */
+    --console-bg: #1a1b26;  /* A popular dark theme background (Tokyo Night) */
+    --console-text: #a9b1d6; /* A soft, readable light blue/gray for default text */
+    
     --font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
@@ -28,9 +31,9 @@ body {
     color: var(--text-color);
     display: flex;
     justify-content: center;
-    align-items: flex-start; /* 改为flex-start，允许滚动 */
+    align-items: flex-start;
     min-height: 100vh;
-    padding: 40px 20px;
+    padding: 50px 20px;
 }
 
 /* --- 主容器与头部 --- */
@@ -38,19 +41,21 @@ body {
     background: var(--container-bg);
     padding: 40px;
     border-radius: 16px;
-    box-shadow: 0 10px 30px var(--shadow-color);
+    box-shadow: 0 8px 32px var(--shadow-color);
     width: 100%;
-    max-width: 800px;
+    max-width: 720px;
     transition: all 0.3s ease;
 }
 
 header {
     text-align: center;
-    margin-bottom: 40px;
+    margin-bottom: 35px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
 }
 
 h1 {
-    font-size: 2.5rem;
+    font-size: 2.2rem;
     font-weight: 700;
     background: linear-gradient(135deg, var(--primary-color-start), var(--primary-color-end));
     -webkit-background-clip: text;
@@ -64,13 +69,9 @@ h1 {
     margin-top: 8px;
 }
 
-/* --- 步骤样式 --- */
+/* --- 步骤卡片样式 --- */
 .step {
-    margin-bottom: 30px;
-    padding: 25px;
-    border: 1px solid var(--border-color);
-    border-radius: 12px;
-    background-color: #fdfdfd;
+    margin-bottom: 25px;
 }
 
 .step-header {
@@ -83,140 +84,153 @@ h1 {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
     background: linear-gradient(135deg, var(--primary-color-start), var(--primary-color-end));
     color: white;
     font-weight: 700;
-    font-size: 1rem;
-    margin-right: 15px;
-    flex-shrink: 0; /* 防止缩放 */
+    font-size: 0.9rem;
+    margin-right: 12px;
+    flex-shrink: 0;
 }
 
 .step h2 {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     color: var(--heading-color);
     margin: 0;
 }
 
 p {
-    line-height: 1.8;
-    margin-bottom: 15px;
-    color: #495057;
+    line-height: 1.7;
+    margin-bottom: 10px;
+    font-size: 0.95rem;
 }
 
 /* --- 表单元素 --- */
 input[type="text"], textarea {
     width: 100%;
-    padding: 15px;
-    margin-top: 10px;
+    padding: 12px 15px;
+    margin-top: 5px;
     border: 1px solid var(--border-color);
     border-radius: 8px;
     font-size: 1rem;
     font-family: var(--font-family);
-    box-sizing: border-box;
-    resize: vertical;
-    transition: border-color 0.3s, box-shadow 0.3s;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    background-color: #fdfdff;
 }
 
 input[type="text"]:focus, textarea:focus {
     outline: none;
     border-color: var(--primary-color-start);
-    box-shadow: 0 0 0 4px rgba(0, 161, 214, 0.15);
+    box-shadow: 0 0 0 3px rgba(0, 161, 214, 0.1);
 }
 
 textarea {
-    min-height: 100px;
+    min-height: 90px;
+    resize: vertical;
 }
 
 /* --- 按钮样式 --- */
 button {
-    width: 100%;
-    padding: 16px;
+    padding: 14px;
     border: none;
     border-radius: 8px;
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     font-weight: 500;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.25s ease;
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     font-family: var(--font-family);
+}
+
+button:disabled {
+    background-color: #e9ecef !important;
+    color: #adb5bd !important;
+    cursor: not-allowed;
+    box-shadow: none !important;
+    transform: none !important;
+}
+
+.button-group {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+#start-btn, .secondary-btn {
+    width: 100%;
 }
 
 #start-btn {
     background: linear-gradient(135deg, var(--primary-color-start), var(--primary-color-end));
     color: white;
-    box-shadow: 0 4px 15px rgba(0, 161, 214, 0.2);
+    box-shadow: 0 4px 12px rgba(0, 161, 214, 0.2);
 }
 
-#start-btn:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(251, 114, 153, 0.3);
+#start-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(251, 114, 153, 0.25);
 }
 
 .secondary-btn {
-    background-color: #f1f3f5;
+    background-color: #fff;
     color: var(--text-color);
-    margin-bottom: 15px;
+    border: 1px solid var(--border-color);
 }
-.secondary-btn:hover {
-    background-color: #e9ecef;
+.secondary-btn:hover:not(:disabled) {
+    background-color: #f8f9fa;
+    border-color: #ced4da;
 }
 
-button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-    box-shadow: none;
-    transform: none;
+#stop-btn {
+    width: 100%;
+    background-color: #6c757d;
+    color: white;
+}
+#stop-btn:hover:not(:disabled) {
+    background-color: #5a6268;
+}
+.hidden {
+    display: none;
 }
 
 /* --- 加载动画 --- */
 .spinner {
-    width: 20px;
-    height: 20px;
-    border: 3px solid rgba(255, 255, 255, 0.3);
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
     border-radius: 50%;
     border-top-color: #fff;
     animation: spin 1s ease-in-out infinite;
     display: none; /* 默认隐藏 */
 }
-
-#start-btn.loading .spinner {
-    display: block;
-}
-#start-btn.loading .btn-text {
-    display: none;
+.secondary-btn .spinner {
+    border-color: rgba(0,0,0,0.2);
+    border-top-color: var(--text-color);
 }
 
-@keyframes spin {
-    to { transform: rotate(360deg); }
-}
+button.loading .spinner { display: block; }
+button.loading .btn-text { display: none; }
+@keyframes spin { to { transform: rotate(360deg); } }
 
 /* --- 自定义复选框 --- */
 .options-container {
     margin-top: 20px;
-    margin-bottom: 25px;
     display: flex;
     align-items: center;
 }
-
-#sub-comments-checkbox {
-    display: none; /* 隐藏原生复选框 */
-}
-
+#sub-comments-checkbox { display: none; }
 #sub-comments-checkbox + label {
     position: relative;
     padding-left: 30px;
     cursor: pointer;
     user-select: none;
-    font-size: 1rem;
     color: var(--text-color);
 }
-
 #sub-comments-checkbox + label::before {
     content: '';
     position: absolute;
@@ -225,12 +239,11 @@ button:disabled {
     transform: translateY(-50%);
     width: 20px;
     height: 20px;
-    border: 2px solid var(--border-color);
+    border: 2px solid #ced4da;
     border-radius: 5px;
     background: var(--container-bg);
     transition: all 0.2s;
 }
-
 #sub-comments-checkbox + label::after {
     content: '✔';
     position: absolute;
@@ -239,67 +252,65 @@ button:disabled {
     transform: translateY(-50%) scale(0);
     font-size: 16px;
     color: white;
-    transition: all 0.2s;
+    transition: all 0.2s ease-in-out;
 }
-
 #sub-comments-checkbox:checked + label::before {
     background: var(--primary-color-start);
     border-color: var(--primary-color-start);
 }
-
 #sub-comments-checkbox:checked + label::after {
     transform: translateY(-50%) scale(1);
 }
 
 /* --- 日志控制台 --- */
 .console-container {
-    margin-top: 40px;
+    margin-top: 35px;
 }
 .console-container h2 {
     display: flex;
     align-items: center;
     gap: 8px;
     font-size: 1.2rem;
+    padding-bottom: 10px;
     margin-bottom: 15px;
     color: var(--heading-color);
+    border-bottom: 1px solid var(--border-color);
 }
 .console-icon {
-    width: 8px;
-    height: 16px;
-    background: var(--console-text);
-    animation: blink 1.2s infinite steps(1, start);
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    background: var(--success-color);
+    border-radius: 50%;
+    animation: blink 1.5s infinite;
 }
-@keyframes blink {
-    50% { background: transparent; }
-}
+@keyframes blink { 50% { opacity: 0.3; } }
 
 #log-console {
     background-color: var(--console-bg);
     color: var(--console-text);
-    height: 300px;
+    height: 350px;
     overflow-y: scroll;
-    padding: 20px;
+    padding: 15px;
     border-radius: 8px;
     font-family: "SF Mono", "Fira Code", "Consolas", Menlo, monospace;
     font-size: 0.9rem;
     white-space: pre-wrap;
     word-wrap: break-word;
-    border: 1px solid #333;
+    border: 1px solid #414868; /* A border that complements the new background */
 }
-
-.log-info { color: #569cd6; }
-.log-error { color: #f44747; }
-.log-success { color: #4ec9b0; }
+#log-console p {
+    margin-bottom: 5px;
+    color: var(--console-text); /* 确保 p 标签默认颜色 */
+}
+/* --- MODIFIED LOG COLORS FOR BETTER CONTRAST --- */
+.log-timestamp { color: #565f89; margin-right: 10px; } /* Dimmer timestamp for better hierarchy */
+.log-info { color: #7aa2f7; }      /* A slightly brighter blue */
+.log-error { color: #f7768e; }     /* A modern, readable red */
+.log-success { color: #73daca; }   /* A modern teal/green */
+.log-warn { color: #e0af68; }      /* A modern orange/yellow */
 .log-download a {
-    color: #ce9178;
+    color: #ff9e64;                /* A brighter orange for links */
     text-decoration: underline;
     font-weight: bold;
 }
-
-.log-timestamp {
-    color: #888; /* 定义一个中性的灰色 */
-    margin-right: 8px; /* 在时间戳和日志消息之间增加一点间距 */
-}
-
-.log-info { color: #569cd6; }
-.log-error { color: #f44747; }

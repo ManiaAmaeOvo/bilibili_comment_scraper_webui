@@ -1,5 +1,6 @@
 import asyncio
-from fastapi import FastAPI, Request, Query, WebSocket, WebSocketDisconnect
+import uuid
+from fastapi import FastAPI, Request, Query, WebSocket, HTTPException
 from fastapi.responses import HTMLResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -12,24 +13,67 @@ app = FastAPI()
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 templates = Jinja2Templates(directory="app/templates")
 
+# --- 新增 ---
+# 用于存储每个正在进行的爬取任务的停止信号事件
+# 键是任务ID，值是 asyncio.Event 对象
+scraping_events = {}
+
 @app.get("/", response_class=HTMLResponse)
 async def read_root(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
-# 【修改点】增加了 scrape_sub_comments 参数
 @app.get("/scrape/")
 async def scrape_endpoint(
+    request: Request, # 添加 request 参数以检测连接断开
     bvid: str = Query(...), 
     cookie: str = Query(...),
-    scrape_sub_comments: bool = Query(False) # 接收新参数
+    scrape_sub_comments: bool = Query(False)
 ):
-    decoded_cookie = urllib.parse.unquote(cookie)
+    # --- 新增：为每个任务创建唯一的ID和停止事件 ---
+    task_id = str(uuid.uuid4())
+    stop_event = asyncio.Event()
+    scraping_events[task_id] = stop_event
+
     async def log_generator():
-        # 将新参数传递给爬虫核心
-        async for log_message in get_comments_scraper(bvid, decoded_cookie, scrape_sub_comments):
-            yield log_message
-            await asyncio.sleep(0.01)
+        # 第一条消息，立即将任务ID发送给前端
+        yield f"TASK_ID:{task_id}"
+        
+        try:
+            # 将 stop_event 传递给爬虫核心
+            async for log_message in get_comments_scraper(
+                bvid, 
+                urllib.parse.unquote(cookie), 
+                scrape_sub_comments, 
+                stop_event
+            ):
+                # 在发送每条日志前，检查客户端是否已断开连接
+                if await request.is_disconnected():
+                    # 如果连接已断开，设置停止事件，让爬虫优雅退出
+                    stop_event.set()
+                    print(f"Connection lost for task {task_id}, sending stop signal.")
+                    break # 停止发送日志
+                yield log_message
+        finally:
+            # --- 新增：任务结束后（无论成功、失败还是中断），都从字典中清理 ---
+            if task_id in scraping_events:
+                del scraping_events[task_id]
+            print(f"Task {task_id} finished and cleaned up.")
+
     return EventSourceResponse(log_generator())
+
+# --- 新增：用于接收停止信号的API端点 ---
+@app.post("/stop/{task_id}")
+async def stop_scrape(task_id: str):
+    """
+    根据任务ID，找到对应的停止事件并设置它。
+    """
+    if task_id in scraping_events:
+        scraping_events[task_id].set()
+        return {"message": f"Stop signal sent to task {task_id}."}
+    
+    # 如果任务ID不存在（可能已完成），返回404
+    raise HTTPException(status_code=404, detail="Task not found or already completed.")
+
 
 @app.get("/download/{filename}")
 async def download_file(filename: str):
