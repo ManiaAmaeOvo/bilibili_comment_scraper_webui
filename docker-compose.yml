@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  bbcs:
+    build: .
+    container_name: bbcs-app
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./:/app
+      - /app/__pycache__
+    environment:
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
+    stdin_open: true
+    tty: true
